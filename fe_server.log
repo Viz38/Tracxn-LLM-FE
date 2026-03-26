@@ -1,0 +1,11 @@
+
+> fe@0.0.0 dev
+> vite --port 5173
+
+Port 5173 is in use, trying another one...
+
+  VITE v8.0.2  ready in 115 ms
+
+  ➜  Local:   http://localhost:5174/
+  ➜  Network: use --host to expose
+  ➜  press h + enter to show help
