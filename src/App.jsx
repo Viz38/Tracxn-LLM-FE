@@ -4,7 +4,8 @@ import './index.css'
 function App() {
   // Navigation & Model State
   const [view, setView] = useState('analyzer') // 'analyzer' | 'chat'
-  const [selectedModel, setSelectedModel] = useState('llama3.2:3b')
+  const [availableModels, setAvailableModels] = useState([])
+  const [selectedModel, setSelectedModel] = useState('')
   
   // Analyzer State
   const [url, setUrl] = useState('')
@@ -21,6 +22,18 @@ function App() {
   const chatEndRef = useRef(null)
 
   const BASE_API_URL = 'https://viridescent-uriah-leaky.ngrok-free.dev'
+
+  useEffect(() => {
+    fetch(`${BASE_API_URL}/models`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.models && data.models.length > 0) {
+          setAvailableModels(data.models)
+          setSelectedModel(data.models[0])
+        }
+      })
+      .catch(err => console.error("Failed to load models", err))
+  }, [])
 
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -211,8 +224,13 @@ function App() {
         <div className="model-selector">
           <label>Active Model:</label>
           <select value={selectedModel} onChange={(e) => setSelectedModel(e.target.value)}>
-            <option value="llama3.2:3b">Llama 3.2 (3B)</option>
-            <option value="phi4-mini">Phi-4 Mini</option>
+            {availableModels.length > 0 ? (
+              availableModels.map(model => (
+                <option key={model} value={model}>{model}</option>
+              ))
+            ) : (
+              <option value="">Loading models...</option>
+            )}
           </select>
         </div>
       )}
